@@ -10,11 +10,15 @@ import java.util.Arrays;
  * @author Samuel A. Rebelsky
  */
 public class Hash {
+
   // +--------+------------------------------------------------------
   // | Fields |
   // +--------+
 
-   byte[] arrayBytes;
+  /**
+   * The data to be hashed.
+   */
+  private byte[] data;
 
   // +--------------+------------------------------------------------
   // | Constructors |
@@ -26,7 +30,7 @@ public class Hash {
    * @param data The data to copy into the hash.
    */
   public Hash(byte[] data) {
-    this.arrayBytes = Arrays.copyOf(data, data.length);
+    this.data = Arrays.copyOf(data, data.length);
   } // Hash(byte[])
 
   // +---------+-----------------------------------------------------
@@ -39,7 +43,7 @@ public class Hash {
    * @return the number of bytes in the hash.
    */
   public int length() {
-    return this.arrayBytes.length; // STUB
+    return this.data.length;
   } // length()
 
   /**
@@ -50,7 +54,7 @@ public class Hash {
    * @return the ith byte
    */
   public byte get(int i) {
-    return this.arrayBytes[i];
+    return this.data[i];
   } // get()
 
   /**
@@ -59,10 +63,10 @@ public class Hash {
    * @return a copy of the bytes in the hash.
    */
   public byte[] getBytes() {
-    byte[] copy = new byte[this.arrayBytes.length];
-    for (int i = 0; i < this.arrayBytes.length; i++) {
-      copy[i] = this.arrayBytes[i];
-    }
+    byte[] copy = new byte[this.data.length];
+    for (int i = 0; i < this.data.length; i++) {
+      copy[i] = this.data[i];
+    } // for
     return copy;
   } // getBytes()
 
@@ -73,10 +77,9 @@ public class Hash {
    */
   public String toString() {
     StringBuilder hexString = new StringBuilder();
-    for(int i = 0; i < this.arrayBytes.length; i++){
-      hexString.append(String.format("%02X",this.arrayBytes[i]));
-      System.out.println(new String(hexString));
-    }
+    for (int i = 0; i < this.data.length; i++) {
+      hexString.append(String.format("%02X", this.data[i]));
+    } // for
     return new String(hexString);
   } // toString()
 
@@ -88,7 +91,8 @@ public class Hash {
    * @return true if the two objects are conceptually equal and false otherwise.
    */
   public boolean equals(Object other) {
-    return (other instanceof Hash) && Arrays.equals(((Hash)other).arrayBytes, this.getBytes());
+    return (other instanceof Hash)
+        && Arrays.equals(((Hash) other).data, this.getBytes());
   } // equals(Object)
 
   /**
