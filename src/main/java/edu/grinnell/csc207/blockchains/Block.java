@@ -3,7 +3,6 @@ package edu.grinnell.csc207.blockchains;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Random;
 
 /**
  * Blocks to be stored in blockchains.
@@ -24,7 +23,8 @@ public class Block {
   private int number;
 
   /**
-   * The transaction that contains the source, target, and transaction number.
+   * The transaction that contains the source, target, and
+   * transaction number.
    */
   private Transaction transaction;
 
@@ -48,53 +48,58 @@ public class Block {
   // +--------------+
 
   /**
-   * Create a new block from the specified block number, transaction, and previous hash, mining to
-   * choose a nonce that meets the requirements of the validator.
+   * Create a new block from the specified block number, transaction,
+   * and previous hash, mining to choose a nonce that meets the requirements
+   * of the validator.
    *
-   * @param num The number of the block.
-   * @param transaction The transaction for the block.
-   * @param prevHash The hash of the previous block.
-   * @param check The validator used to check the block.
+   * @param num
+   *    The number of the block.
+   * @param transaction
+   *    The transaction for the block.
+   * @param prevHash
+   *    The hash of the previous block.
+   * @param check
+   *    The validator used to check the block.
    */
-  public Block(int num, Transaction transaction, Hash prevHash, HashValidator check) {
-    /* Assign normal fields */
+  public Block(int num, Transaction transaction, Hash prevHash,
+      HashValidator check) {
     this.number = num;
     this.transaction = transaction;
     this.prevHash = prevHash;
-    Hash hash = null;
 
-    for (long nonce = 0; nonce < Long.MAX_VALUE; nonce++) {
-      try {
-        hash = computeHash(num, transaction, prevHash, nonce);
-        if (check.isValid(hash)) {
-          this.nonce = nonce;
-          this.hash = hash;
-          break;
-        } // if
-      } catch (NoSuchAlgorithmException e) {
-        return;
-      } // try/catch
-    } // for
+    /* Mine for a nonce value to find the block's hash. */
+    try {
+      this.nonce = mine(num, transaction, prevHash, check);
+      this.hash = computeHash(num, transaction, prevHash, this.nonce);
+    } catch (NoSuchAlgorithmException e) {
+      return;
+    } // try/catch
   } // Block(int, Transaction, Hash, HashValidator)
 
   /**
    * Create a new block, computing the hash for the block.
    *
-   * @param num The number of the block.
-   * @param transaction The transaction for the block.
-   * @param prevHash The hash of the previous block.
-   * @param nonce The nonce of the block.
+   * @param num
+   *    The number of the block.
+   * @param transaction
+   *    The transaction for the block.
+   * @param prevHash
+   *    The hash of the previous block.
+   * @param nonce
+   *    The nonce of the block.
    */
   public Block(int num, Transaction transaction, Hash prevHash, long nonce) {
     this.number = num;
     this.transaction = transaction;
     this.prevHash = prevHash;
     this.nonce = nonce;
+
+    /* Find the block's hash value. */
     try {
       this.hash = computeHash((num), transaction, prevHash, nonce);
     } catch (NoSuchAlgorithmException e) {
       return;
-    }
+    } // try/catch
   } // Block(int, Transaction, Hash, long)
 
   // +---------+-----------------------------------------------------
@@ -102,20 +107,56 @@ public class Block {
   // +---------+
 
   /**
-   * Compute the hash of the block given all the other info already stored in the block.
+   * Mine for a nonce value.
    *
-   * @param number The number of the block.
-   * @param transaction The transaction meta-information of the block.
-   * @param prevHash The previous block's hash value (if it exists).
-   * @param nonce The nonce value, unhashed.
+   * @param num
+   *    The number of the block.
+   * @param transaction
+   *    The transaction for the block.
+   * @param prevHash
+   *    The hash of the previous block.
+   * @param check
+   *    The validator used to check the block.
+   * @return
+   *    The mined nonce value.
    *
-   * @return The block's computed hash value.
-   *
-   *         (Self-note) Implement in this order: 1) Block number 2) Source, target, amount
-   *         (transaction) 5) Previous block's hash (if not first block) 6) The nonce hash
+   * @throws NoSuchAlgorithmException
+   *    When the hashing algorithm fails to be instantiated.
    */
-  protected static Hash computeHash(int number, Transaction transaction, Hash prevHash, long nonce)
-      throws NoSuchAlgorithmException {
+  protected static long mine(int num, Transaction transaction,
+      Hash prevHash, HashValidator check) throws NoSuchAlgorithmException {
+    Hash hash = null;
+
+    /* Iterate through all possible long values to find the nonce. */
+    for (long nonce = 0; nonce < Long.MAX_VALUE; nonce++) {
+      hash = computeHash(num, transaction, prevHash, nonce);
+      if (check.isValid(hash)) {
+        return nonce;
+      } // if
+    } // for(nonce)
+    throw new NoSuchAlgorithmException();
+  } // mine(int, Transaction, Hash, HashValidator)
+
+  /**
+   * Compute the hash of the block given all the other info already stored
+   * in the block.
+   *
+   * @param number
+   *    The number of the block.
+   * @param transaction
+   *    The transaction meta-information of the block.
+   * @param prevHash
+   *    The previous block's hash value (if it exists).
+   * @param nonce
+   *    The nonce value, unhashed.
+   * @return
+   *    The block's computed hash value.
+   *
+   * @throws NoSuchAlgorithmException
+   *    When the hashing algorithm fails to be instantiated.
+   */
+  protected static Hash computeHash(int number, Transaction transaction,
+      Hash prevHash, long nonce) throws NoSuchAlgorithmException {
     MessageDigest md = MessageDigest.getInstance("sha-256");
 
     /* Update the block number's hash */
@@ -136,7 +177,7 @@ public class Block {
 
     /* Digest */
     return new Hash(md.digest());
-  } // computeHash()
+  } // computeHash(int, Transaction, Hash, long)
 
   // +---------+-----------------------------------------------------
   // | Methods |
@@ -166,7 +207,7 @@ public class Block {
    * @return the nonce.
    */
   public long getNonce() {
-    return this.nonce; // STUB
+    return this.nonce;
   } // getNonce()
 
   /**
@@ -190,16 +231,33 @@ public class Block {
   /**
    * Get a string representation of the block.
    *
-   * @return a string representation of the block.
+   * @return
+   *    A string representation of the block.
    */
   public String toString() {
-    // if(transaction.getSource() != null){
-    // return "Block" + this.number +
-    // "[Source" + transaction.getSource() + ", Target:" + transaction.getTarget() + "], Amount"
-    // + transaction.getAmount() + ", Nonce" + this.theNonce + "prevHash:" + this.previousHash +
-    // "hash:" + this.blockHash;
-    // } // toString()
-    return "ehhh";
-    // } // class Block
+    StringBuilder str = new StringBuilder();
+    Transaction receipt = this.getTransaction();
+
+    /* Start with block # */
+    str.append(String.format("Block %d (Transaction [", this.number));
+
+    /* Format depending on transaction type */
+    if (receipt.getSource() == null) {
+      str.append(String.format(
+          "Deposit, "));
+    } else {
+      str.append(String.format(
+          "Source: %s, ",
+          receipt.getSource()));
+    } // elif
+
+    /* The rest of the transaction formatting */
+    str.append(String.format("Target: %s, Amount: %d], ",
+        receipt.getTarget(), receipt.getAmount()));
+
+    /* Format hashes */
+    str.append(String.format("Nonce: %d, prevHash: %s, hash: %s)",
+        this.getNonce(), this.getPrevHash().toString(), this.getHash().toString()));
+    return str.toString();
   } // toString()
 } // class Block
