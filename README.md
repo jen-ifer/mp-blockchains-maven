@@ -1,15 +1,32 @@
-# mp-blockchains-maven
+## Mini-Project #9: Blockchains
 
-An exploration of blockchains in Java.
+### Authors
 
-Authors
+- *Sara Jaljaa*
+- *Jenifer Silva*
+- *Samuel A. Rebelsky (starter code)*
 
-* @author Sara Jaljaa
-* @author Jenifer Silva
-* Samuel A. Rebelsky (starter code)
+### Overview
 
-Acknowledgements
+A singly-linked PoW-based blockchain ADT.
 
-* Mentor Maria helped us by going deep into what a hash is
+---
 
-This code may be found at <https://github.com/jen-ifer/mp-blockchains-maven>. The original code may be found at <https://github.com/Grinnell-CSC207/mp-blockchinas-maven>.
+### Acknowledgements
+
+**Peer Educators**
+
+- (11/17) Maria's mentor session: direction clarifications
+
+**Documentation**
+
+- Debugging: [NoSuchAlgorithmException](https://docs.oracle.com/javase/8/docs/api/index.html?java/security/NoSuchAlgorithmException.html)
+- String formatting conversions: [Formatter](https://download.java.net/java/early_access/jdk24/docs/api/java.base/java/lang/String.html)
+- Formatting strings: [String](https://download.java.net/java/early_access/jdk24/docs/api/java.base/java/lang/String.html)
+
+---
+
+### Source
+
+- Original: [Grinnell-CSC207/mp-blockchains-maven](https://github.com/Grinnell-CSC207/mp-blockchains-maven)
+- This project: [jen-ifer/mp-blockchains-maven](https://github.com/jen-ifer/mp-blockchains-maven)
