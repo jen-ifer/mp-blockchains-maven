@@ -14,7 +14,7 @@ public class Hash {
   // | Fields |
   // +--------+
 
-  byte[] arrayBytes;
+   byte[] arrayBytes;
 
   // +--------------+------------------------------------------------
   // | Constructors |
@@ -26,8 +26,7 @@ public class Hash {
    * @param data The data to copy into the hash.
    */
   public Hash(byte[] data) {
-    this.arrayBytes = data;
-
+    this.arrayBytes = Arrays.copyOf(data, data.length);
   } // Hash(byte[])
 
   // +---------+-----------------------------------------------------
@@ -75,8 +74,8 @@ public class Hash {
   public String toString() {
     StringBuilder hexString = new StringBuilder();
     for(int i = 0; i < this.arrayBytes.length; i++){
-      Integer conversion = Byte.toUnsignedInt(this.arrayBytes[i]);
-      hexString.append(Integer.toHexString(conversion.hashCode()));
+      hexString.append(String.format("%02X",this.arrayBytes[i]));
+      System.out.println(new String(hexString));
     }
     return new String(hexString);
   } // toString()
@@ -89,11 +88,7 @@ public class Hash {
    * @return true if the two objects are conceptually equal and false otherwise.
    */
   public boolean equals(Object other) {
-    Hash o = null;
-    if (!(other instanceof Hash)) {
-      o = (Hash) other;
-    }
-    return Arrays.equals(o.arrayBytes, this.arrayBytes);
+    return (other instanceof Hash) && Arrays.equals(((Hash)other).arrayBytes, this.getBytes());
   } // equals(Object)
 
   /**

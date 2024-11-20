@@ -46,7 +46,7 @@ public class BlockChain implements Iterable<Transaction> {
    *
    * @return a new block with correct number, hashes, and such.
    */
-  public Block mine(Transaction t) {
+  public Block mine(Transaction t) throws Exception {
     return new Block(10, t, new Hash(new byte[] {7}), 11);       // STUB
   } // mine(Transaction)
 
