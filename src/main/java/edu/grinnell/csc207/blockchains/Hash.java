@@ -58,16 +58,13 @@ public class Hash {
   } // get()
 
   /**
-   * Get a copy of the bytes in the hash. We make a copy so that the client cannot change them.
+   * Get a copy of the bytes in the hash. We make a copy so that the
+   * client cannot change them.
    *
    * @return a copy of the bytes in the hash.
    */
   public byte[] getBytes() {
-    byte[] copy = new byte[this.data.length];
-    for (int i = 0; i < this.data.length; i++) {
-      copy[i] = this.data[i];
-    } // for
-    return copy;
+    return Arrays.copyOf(this.data, this.data.length);
   } // getBytes()
 
   /**
