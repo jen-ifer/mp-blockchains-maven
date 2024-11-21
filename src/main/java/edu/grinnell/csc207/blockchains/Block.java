@@ -23,13 +23,12 @@ public class Block {
   private int number;
 
   /**
-   * The transaction that contains the source, target, and
-   * transaction number.
+   * The source, target, and amount transacted.
    */
   private Transaction transaction;
 
   /**
-   * The hash number of the previous block.
+   * The hash value of the previous block.
    */
   private Hash prevHash;
 
@@ -39,7 +38,7 @@ public class Block {
   private long nonce;
 
   /**
-   * The hash number of the block.
+   * The hash value of the block.
    */
   private Hash hash;
 
@@ -155,7 +154,7 @@ public class Block {
    * @throws NoSuchAlgorithmException
    *    When the hashing algorithm fails to be instantiated.
    */
-  protected static Hash computeHash(int number, Transaction transaction,
+  static Hash computeHash(int number, Transaction transaction,
       Hash prevHash, long nonce) throws NoSuchAlgorithmException {
     MessageDigest md = MessageDigest.getInstance("sha-256");
 
@@ -236,24 +235,12 @@ public class Block {
    */
   public String toString() {
     StringBuilder str = new StringBuilder();
-    Transaction receipt = this.getTransaction();
 
     /* Start with block # */
-    str.append(String.format("Block %d (Transaction [", this.number));
+    str.append(String.format("Block %d (Transaction: ", this.number));
 
-    /* Format depending on transaction type */
-    if (receipt.getSource() == null) {
-      str.append(String.format(
-          "Deposit, "));
-    } else {
-      str.append(String.format(
-          "Source: %s, ",
-          receipt.getSource()));
-    } // elif
-
-    /* The rest of the transaction formatting */
-    str.append(String.format("Target: %s, Amount: %d], ",
-        receipt.getTarget(), receipt.getAmount()));
+    /* Format transaction */
+    str.append(this.getTransaction().toString());
 
     /* Format hashes */
     str.append(String.format("Nonce: %d, prevHash: %s, hash: %s)",
