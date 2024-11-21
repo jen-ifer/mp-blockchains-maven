@@ -4,7 +4,6 @@ import edu.grinnell.csc207.blockchains.Block;
 import edu.grinnell.csc207.blockchains.BlockChain;
 import edu.grinnell.csc207.blockchains.HashValidator;
 import edu.grinnell.csc207.blockchains.Transaction;
-
 import edu.grinnell.csc207.util.IOUtils;
 
 import java.io.PrintWriter;
@@ -19,6 +18,7 @@ import java.io.InputStreamReader;
  * @author Samuel A. Rebelsky
  */
 public class BlockChainUI {
+
   // +-----------+---------------------------------------------------
   // | Constants |
   // +-----------+
@@ -108,7 +108,7 @@ public class BlockChainUI {
           break;
 
         case "blocks":
-          pen.printf("Command '%s' is not yet implemented", command);
+          pen.printf(chain.format(chain.blocks()));
           break;
 
         case "check":
@@ -136,11 +136,11 @@ public class BlockChainUI {
           break;
 
         case "transactions":
-          pen.printf("Command '%s' is not yet implemented", command);
+          pen.printf(chain.format(chain.iterator()));
           break;
 
         case "users":
-          pen.printf("Command '%s' is not yet implemented", command);
+          pen.printf(chain.format(chain.users()));
           break;
 
         default:
