@@ -87,7 +87,7 @@ public class Transaction {
    */
   public String toString() {
     return String.format("[%s, Target: %s, Amount: %s]",
-        ("".equals(this.source)) ? "Deposit, " : "Source: " + this.source,
+        ("".equals(this.source)) ? "Deposit" : "Source: " + this.source,
         this.target,
         this.amount);
   } // toString()
