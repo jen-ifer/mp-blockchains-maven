@@ -64,6 +64,9 @@ public class Hash {
    * @return a copy of the bytes in the hash.
    */
   public byte[] getBytes() {
+    if (this.data == null) {
+      return new byte[0];
+    } // if
     return Arrays.copyOf(this.data, this.data.length);
   } // getBytes()
 

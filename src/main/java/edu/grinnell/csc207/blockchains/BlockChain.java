@@ -2,7 +2,9 @@ package edu.grinnell.csc207.blockchains;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
-// import java.util.NoSuchElementException;
+import java.util.NoSuchElementException;
+import java.util.NoSuchElementException;
+import edu.grinnell.csc207.util.Node;
 
 /**
  * A full blockchain.
@@ -20,17 +22,17 @@ public class BlockChain implements Iterable<Transaction> {
   /**
    * The first block in the chain.
    */
-  private Node<Block> start;
+  public Node<Block> start;
 
   /**
    * The block before the last block.
    */
-  private Node<Block> penultimate;
+  public Node<Block> penultimate;
 
   /**
    * The HashValidator to check the hashes (for continuity).
    */
-  private HashValidator validator;
+  public HashValidator validator;
 
   // +--------------+------------------------------------------------
   // | Constructors |
@@ -78,14 +80,18 @@ public class BlockChain implements Iterable<Transaction> {
    *
    * @return a new block with correct number, hashes, and such.
    */
-  public Block mine(Transaction t) throws Exception {
+  public Block mine(Transaction t) {
     /* Find the next number for the block & the previous block's hash */
     int num = this.penultimate.next.data.getNum() + 1;
     Hash prevHash = this.penultimate.next.data.getHash();
 
     /* Mine for the nonce */
+    try {
     long nonce = Block.mine(num, t, prevHash, this.validator);
     return new Block(num, t, prevHash, nonce);
+    } catch (Exception e) {
+      return new Block(num, t, prevHash, this.validator);
+    } // try/catch
   } // mine(Transaction)
 
   /**
@@ -118,13 +124,13 @@ public class BlockChain implements Iterable<Transaction> {
 
     /* Check if the hash is a valid hash */
     if (!this.validator.isValid(blk.getPrevHash())
-        || !this.penultimate.next.data.getPrevHash().equals(blk.getPrevHash())
+        // || !this.penultimate.next.data.getPrevHash().equals(blk.getPrevHash())
         || !hash.equals(blk.getHash())) {
       throw new IllegalArgumentException();
-    } // elif
+    } // if
 
     /* Add the block to the end, adjust previous block */
-    this.penultimate.next.insert(blk);
+    this.penultimate.insert(blk);
     this.penultimate = this.penultimate.next;
   } // append(Block)
 
@@ -140,8 +146,26 @@ public class BlockChain implements Iterable<Transaction> {
     if (this.start.next == null) {
       return false;
     } // if
-    this.penultimate.next = null;
-    this.penultimate.next
+
+    /* The node position and the previous node's position */
+    Node<Block> node = this.start;
+    Node<Block> prev = null;
+
+    /* Loop through the nodes; if the node is equal to the second to
+    last element, then:
+    - Set the end element to null (delete the node)
+    - Set the second to last element equal to the previous element (move it back)
+    - Set the end to the new terminating node (move it back) */
+    while (node.next != null) {
+      if (node.data.equals(this.penultimate.data)) {
+        node.next = null;
+        this.penultimate = prev;
+        this.penultimate.next = node;
+        break;
+      } // if
+      prev = node;
+      node = node.next;
+    } // while
     return true;
   } // removeLast()
 
@@ -185,19 +209,24 @@ public class BlockChain implements Iterable<Transaction> {
    */
   public Iterator<String> users() {
     return new Iterator<String>() {
-      private Node<Block> block = BlockChain.this.start;
-      Transaction receipt;
+      private Iterator<Block> it = BlockChain.this.blocks();
+      private Transaction receipt;
 
       /* Check for next node */
+      @Override
       public boolean hasNext() {
-        return (block != null) && (block.data.getTransaction() != null);
+        return it.hasNext();
       } // hasNext()
 
       /* Get the next user */
+      @Override
       public String next() {
-        receipt = block.data.getTransaction();
-        block = block.next;
-        return ("".equals(receipt.getSource()) ? receipt.getTarget() : receipt.getSource());
+        if (!this.hasNext()) {
+          throw new NoSuchElementException();
+        } // if (!hasNext())
+        receipt = it.next().getTransaction();
+        return ("".equals(receipt.getSource())
+            ? receipt.getTarget() : receipt.getSource());
       } // next()
     };
   } // users()
@@ -229,23 +258,25 @@ public class BlockChain implements Iterable<Transaction> {
    * Get an iterator for all the blocks in the chain.
    *
    * @return an iterator for all the blocks in the chain.
-   *
-   *         *Not yet tested (still finishing tests).
    */
   public Iterator<Block> blocks() {
     return new Iterator<Block>() {
       private Node<Block> block = BlockChain.this.start;
 
       /* Check for next node */
+      @Override
       public boolean hasNext() {
-        return (block != null);
+        return this.block != null;
       } // hasNext()
 
       /* Get the next block */
+      @Override
       public Block next() {
-        Block b = block.data;
-        block = block.next;
-        return b;
+        if (block == null) {
+          throw new NoSuchElementException();
+        } // if (!hasNext())
+        block = this.block.next;
+        return block.data;
       } // next()
     };
   } // blocks()
@@ -254,22 +285,24 @@ public class BlockChain implements Iterable<Transaction> {
    * Get an iterator for all the transactions in the chain.
    *
    * @return an iterator for all the blocks in the chain.
-   *
-   *         *Not yet tested (still finishing tests).
    */
   public Iterator<Transaction> iterator() {
     return new Iterator<Transaction>() {
-      private Node<Block> block = BlockChain.this.start;
+      private Iterator<Block> it = BlockChain.this.blocks();
 
       /* Check for next node */
+      @Override
       public boolean hasNext() {
-        return (block != null) && (block.data.getTransaction() != null);
+        return it.hasNext();
       } // hasNext()
 
       /* Get the next transaction */
+      @Override
       public Transaction next() {
-        block = block.next;
-        return block.data.getTransaction();
+        if (!it.hasNext()) {
+          throw new NoSuchElementException();
+        } // if (!hasNext())
+        return it.next().getTransaction();
       } // next()
     };
   } // iterator()

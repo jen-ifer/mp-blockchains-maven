@@ -242,9 +242,18 @@ public class Block {
     /* Format transaction */
     str.append(this.getTransaction().toString());
 
+    Hash prev = this.getPrevHash();
+    String s = " ";
+    String thish = this.getHash().toString();
+    if (prev == null) {
+      s = "0";
+    } // if
+    if ("".equals(thish)) {
+      thish = "0";
+    }
     /* Format hashes */
     str.append(String.format("Nonce: %d, prevHash: %s, hash: %s)",
-        this.getNonce(), this.getPrevHash().toString(), this.getHash().toString()));
+        this.getNonce(), s, thish));
     return str.toString();
   } // toString()
 } // class Block
