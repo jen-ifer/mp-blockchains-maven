@@ -1,6 +1,5 @@
 package edu.grinnell.csc207.blockchains;
 
-import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,22 +23,22 @@ public class BlockChain implements Iterable<Transaction> {
   /**
    * The first block in the chain.
    */
-  public Node<Block> start;
+  private Node<Block> start;
 
   /**
    * The last block in the chain.
    */
-  public Node<Block> end;
+  private Node<Block> end;
 
   /**
    * The HashValidator to check the hashes (for continuity).
    */
-  public HashValidator validator;
+  private HashValidator validator;
 
   /**
    * The size of the chain.
    */
-  public int size;
+  private int size;
 
   // +--------------+------------------------------------------------
   // | Constructors |
@@ -320,7 +319,7 @@ public class BlockChain implements Iterable<Transaction> {
    * Get an iterator for all the transactions in the chain.
    *
    * @return
-   *    An iterator for all the blocks in the chain.
+   *    An iterator for all the transactions in the chain.
    */
   public Iterator<Transaction> iterator() {
     return new Iterator<Transaction>() {
