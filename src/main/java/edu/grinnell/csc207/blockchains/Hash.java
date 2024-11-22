@@ -77,6 +77,9 @@ public class Hash {
    */
   public String toString() {
     StringBuilder hexString = new StringBuilder();
+    if (this.data.equals(null)) {
+      return null;
+    } // if
     for (int i = 0; i < this.data.length; i++) {
       hexString.append(String.format("%02X", this.data[i]));
     } // for
