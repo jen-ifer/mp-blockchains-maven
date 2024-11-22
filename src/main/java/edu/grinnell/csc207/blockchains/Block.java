@@ -25,7 +25,7 @@ public class Block {
   /**
    * The source, target, and amount transacted.
    */
-  private Transaction transaction;
+  protected Transaction transaction;
 
   /**
    * The hash value of the previous block.
@@ -35,7 +35,7 @@ public class Block {
   /**
    * The nonce value of the block.
    */
-  private long nonce;
+  protected long nonce;
 
   /**
    * The hash value of the block.
@@ -243,17 +243,10 @@ public class Block {
     str.append(this.getTransaction().toString());
 
     Hash prev = this.getPrevHash();
-    String s = " ";
-    String thish = this.getHash().toString();
-    if (prev == null) {
-      s = "0";
-    } // if
-    if ("".equals(thish)) {
-      thish = "0";
-    }
+
     /* Format hashes */
-    str.append(String.format("Nonce: %d, prevHash: %s, hash: %s)",
-        this.getNonce(), s, thish));
+    str.append(String.format(" Nonce: %d, prevHash: %s, hash: %s)",
+        this.getNonce(), prev.toString(), this.getHash().toString()));
     return str.toString();
   } // toString()
 } // class Block
