@@ -149,6 +149,14 @@ public class AssociativeArray<K, V> {
     return this.pairs[index].val;
   } // get(K)
 
+  public K getKey(int i) {
+    // K[] keys = (K[]) new Object[this.size];
+    // for (int i = 0; i < this.size(); i++) {
+      return this.pairs[i].key;
+    // } // for
+    // return keys;
+  }
+
   /**
    * Determine if key appears in the associative array. Should
    * return false for the null key, since it cannot appear.
