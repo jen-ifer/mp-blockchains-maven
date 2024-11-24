@@ -149,13 +149,17 @@ public class AssociativeArray<K, V> {
     return this.pairs[index].val;
   } // get(K)
 
+  /**
+   * Get the key given an index.
+   *
+   * @param i
+   *    The index of the key.
+   * @return
+   *    The key at that index.
+   */
   public K getKey(int i) {
-    // K[] keys = (K[]) new Object[this.size];
-    // for (int i = 0; i < this.size(); i++) {
-      return this.pairs[i].key;
-    // } // for
-    // return keys;
-  }
+    return this.pairs[i].key;
+  } // getKey(i)
 
   /**
    * Determine if key appears in the associative array. Should
