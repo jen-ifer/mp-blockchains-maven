@@ -224,18 +224,17 @@ public class BlockChain implements Iterable<Transaction> {
      * - Set the second to last element equal to the previous element (move it back)
      * - Set the end to the new terminating node (move it back)
      */
-    while (node.next != null) {
+    while (node != null) {
       if (node.data.equals(this.end.data)) {
-        // node.next = null;
         removeUser(this.users, this.end.data);
         this.end = prev;
-        this.end.next = node;
+        this.end.next = null;
+        size--;
         break;
       } // if
       prev = node;
       node = node.next;
     } // while
-    size--;
     return true;
   } // removeLast()
 
