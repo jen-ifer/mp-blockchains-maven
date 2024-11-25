@@ -42,6 +42,8 @@ public class Node<T> {
     /**
    * Create a new node.
    *
+   * @param next
+   *    The next node.
    * @param val
    *    The value to be stored at the new node.
    */

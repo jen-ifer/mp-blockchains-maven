@@ -25,7 +25,7 @@ public class Block {
   /**
    * The source, target, and amount transacted.
    */
-  protected Transaction transaction;
+  private Transaction transaction;
 
   /**
    * The hash value of the previous block.
@@ -35,7 +35,7 @@ public class Block {
   /**
    * The nonce value of the block.
    */
-  protected long nonce;
+  private long nonce;
 
   /**
    * The hash value of the block.
